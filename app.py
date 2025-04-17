@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import joblib
 import pandas as pd
 import re
+import os
 import string
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
@@ -99,4 +100,5 @@ def index():
     return render_template("index.html", prediction=prediction, csv_result=csv_result, election_winner=election_winner)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))  # fallback port if not found
+    app.run(host='0.0.0.0', port=port)
