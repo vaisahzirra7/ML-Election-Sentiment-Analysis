@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tweet Sentiment Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Tweet Sentiment Analysis</h1>
+
+        <!-- Tweet Input Form -->
+        <h3>Welcome to Group K DEMO</h3>
+        <h2>Analyze a Single Tweet</h2>
+        <form method="POST">
+            <textarea name="tweet" rows="4" cols="50" placeholder="Enter your tweet here..."></textarea><br>
+            <button type="submit">Analyze Sentiment</button>
+        </form>
+
+        {% if prediction %}
+            <h3 style="color: 
+                {% if 'positive' in prediction %}green;
+                {% elif 'negative' in prediction %}red;
+                {% else %}gray; {% endif %} font-size: 1.5em;">
+                {{ prediction }}
+            </h3>
+        {% endif %}
+
+        <hr>
+        <!-- CSV Upload Form -->
+        <h2>Or Upload a CSV for Batch Analysis</h2>
+        <form action="/" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".csv" required><br>
+            <button type="submit">Upload CSV</button>
+        </form>
+
+        {% if csv_result %}
+            <h3>CSV Sentiment Analysis Result:</h3>
+            <div>
+                <table border="1">
+                    <tr>
+                        <th>Tweet</th>
+                        <th>Predicted Sentiment</th>
+                        <th>Candidate</th>  <!-- New column for candidate -->
+                    </tr>
+                    {% for row in csv_result %}
+                        <tr>
+                            <td>{{ row.Tweets }}</td>
+                            <td>{{ row.Predicted_Sentiment }}</td>
+                            <td>{{ row.Candidate }}</td>  <!-- Display the candidate detected -->
+                        </tr>
+                    {% endfor %}
+                </table>
+                <hr>
+                <a href="{{ url_for('static', filename='predicted.csv') }}" download>Download the CSV result</a>
+            </div>
+        {% endif %}
+
+        <!-- Predicted Election Winner Section -->
+        {% if election_winner %}
+            <hr>
+            <h2>The Predicted Election Winner Based on Sentiment:</h2>
+            <h3 style="color: blue;">{{ election_winner }}</h3>  <!-- Display the winner -->
+        {% endif %}
+        
+    </div>
+</body>
+</html>
